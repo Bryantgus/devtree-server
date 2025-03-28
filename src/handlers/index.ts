@@ -1,8 +1,9 @@
 import { Request, Response } from "express"
 import User from "../models/User"
-import { checkPassword, hashPassword } from "../utils/auth"
+import { checkPassword, hashPassword } from "../utils/authpassword"
 import slugify from "slugify"
 import { validationResult } from "express-validator"
+import { generateJWT } from "../utils/jw"
 
 
 
@@ -40,8 +41,6 @@ export const createAccount = async(req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
 
-   
-
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
@@ -56,6 +55,19 @@ export const login = async (req: Request, res: Response) => {
         return;
     }
 
-    res.send("hi");
+    const token = generateJWT({user})
+    res.send(token)   
+}
 
-};
+export const getUser = async (req: Request, res: Response) => {
+    const bearer = req.headers.authorization
+    
+    if (!bearer) {
+        const error = new Error('No Autorizado')
+        res.status(401).json({error: error.message})
+        return    
+    }
+
+    const [, token] = bearer.split('')
+    
+}
