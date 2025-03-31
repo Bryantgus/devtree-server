@@ -3,8 +3,8 @@ import User from "../models/User"
 import { checkPassword, hashPassword } from "../utils/authpassword"
 import slugify from "slugify"
 import { validationResult } from "express-validator"
-import { generateJWT } from "../utils/jw"
-
+import { generateJWT } from "../utils/jwt"
+import jwt from "jsonwebtoken"
 
 
 export const createAccount = async(req: Request, res: Response) => {
@@ -57,17 +57,11 @@ export const login = async (req: Request, res: Response) => {
 
     const token = generateJWT({user})
     res.send(token)   
+    return
 }
 
 export const getUser = async (req: Request, res: Response) => {
-    const bearer = req.headers.authorization
-    
-    if (!bearer) {
-        const error = new Error('No Autorizado')
-        res.status(401).json({error: error.message})
-        return    
-    }
-
-    const [, token] = bearer.split('')
+    console.log(req.user);
+        
     
 }
