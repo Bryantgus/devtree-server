@@ -61,7 +61,6 @@ export const login = async (req: Request, res: Response) => {
 }
 
 export const getUser = async (req: Request, res: Response) => {
-    console.log(req.user);
-        
-    
+    res.json(req.user)
+    return          
 }
