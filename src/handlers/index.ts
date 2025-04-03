@@ -30,7 +30,8 @@ export const createAccount = async(req: Request, res: Response) => {
         res.status(409).json({error: error.message})
         return
     }
-
+    console.log();
+    
     const user = new User(req.body)
     user.password = await hashPassword(password)    
     user.handle = handle
@@ -63,4 +64,28 @@ export const login = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
     res.json(req.user)
     return          
+}
+
+export const updateProfile = async (req: Request, res: Response) => {
+    try {
+        const { description } = req.body
+        const handle = slugify(req.body.handle, '')
+        const handleExists = await User.findOne({handle})
+        if (handleExists && handleExists.email !== req.user.email) {
+            const error = new Error ("Un usuario con ese email ya esta registrado")
+            res.status(409).json({error: error.message})
+            return
+        }
+
+        //Actualizar usuario
+        req.user.description = description
+        req.user.handle = handle
+        await req.user.save()
+        res.send('Perfil Actualizado Correctamente')
+
+        
+    } catch (e) {
+        const error = new Error('Hubo un eror')
+        res.status(500).json({error: error.message})
+    }
 }
