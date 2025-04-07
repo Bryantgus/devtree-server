@@ -71,7 +71,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
     try {
-        const { description } = req.body
+        const { description, links } = req.body
         const handle = slugify(req.body.handle, '')
         const handleExists = await User.findOne({handle})
         if (handleExists && handleExists.email !== req.user.email) {
@@ -83,6 +83,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         //Actualizar usuario
         req.user.description = description
         req.user.handle = handle
+        req.user.links = links
         await req.user.save()
         res.send('Perfil Actualizado Correctamente')
 
