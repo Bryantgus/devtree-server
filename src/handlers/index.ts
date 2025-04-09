@@ -79,13 +79,15 @@ export const updateProfile = async (req: Request, res: Response) => {
             res.status(409).json({error: error.message})
             return
         }
-
+        
+        
         //Actualizar usuario
         req.user.description = description
         req.user.handle = handle
         req.user.links = links
         await req.user.save()
         res.send('Perfil Actualizado Correctamente')
+        console.log(links);
 
         
     } catch (e) {
