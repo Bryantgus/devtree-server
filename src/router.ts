@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { createAccount, getUser, login, updateProfile, uploadImage, getUserByHandle } from "./handlers";
+import { createAccount, getUser, login, updateProfile, uploadImage, getUserByHandle, searchByHandle } from "./handlers";
 import { handleInputErrors } from "./middleware/validation";
 import { authenticate } from "./middleware/auth";
 
@@ -59,6 +59,12 @@ router.post('/user/image', authenticate, uploadImage)
 
 router.get('/:handle', getUserByHandle)
 
-
+router.post('/search',
+  body('handle')
+  .notEmpty()
+  .withMessage("La handle no puede ir vacia"),
+  handleInputErrors,
+  searchByHandle
+)
 export default router;
 
