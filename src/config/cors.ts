@@ -1,17 +1,22 @@
-import { CorsOptions} from 'cors'
+import { CorsOptions } from 'cors';
 
 export const corsConfig: CorsOptions = {
     origin: function(origin, callback) {
-        const whiteList = ['https://effortless-blini-cec6a2.netlify.app']
+        const allowedBaseDomain = 'netlify.app';
 
-        if(process.argv[2] === '--api') {
-            whiteList.push(undefined)
-        }
-        if(whiteList.includes(origin)) {
-            callback(null, true)
+        // Permitir sin origin (ej: Postman) si se pasa el flag
+        const allowUndefined = process.argv.includes('--api');
+
+        console.log('🌐 Origin recibido:', origin);
+
+        if (
+            (origin && origin.includes(allowedBaseDomain)) ||
+            (allowUndefined && origin === undefined)
+        ) {
+            callback(null, true);
         } else {
-            callback(new Error('Error de CORS'))
+            callback(new Error('Error de CORS'));
         }
-        
-    }
-}
+    },
+    credentials: true,
+};
